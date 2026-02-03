@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config({ override: true, quiet: true });
-
+import './config/loadEnv';
 import express from 'express';
 import { config } from './config';
 import { connectDB } from './connection';
@@ -8,8 +6,10 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import routes from './routes';
 
 const app = express();
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1', routes);

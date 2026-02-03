@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 
-export interface AppError extends Error {
-  statusCode?: number;
+/** Throw with statusCode so error handler can send the right status */
+export class AppError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = 'AppError';
+    Object.setPrototypeOf(this, AppError.prototype);
+  }
 }
 
 export const errorHandler = (

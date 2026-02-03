@@ -7,6 +7,17 @@ export interface IExperience {
   loaction?: string;
 }
 
+export interface RegisterUserBody {
+  email: string;
+  password: string;
+  full_name?: string;
+}
+
+export interface LoginUserBody {
+  email: string;
+  password: string;
+}
+
 export interface IUser {
   _id: mongoose.Types.ObjectId;
   googleId?: string;
