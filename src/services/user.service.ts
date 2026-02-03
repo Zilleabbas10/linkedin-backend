@@ -88,8 +88,20 @@ export const googleLoginUser = async (input: GoogleLoginUserInput): Promise<IUse
   return { ...userObj, token: jwt } as IUser & { token: string };
 };
 
-export const getCurrentUser = async (id: string): Promise<IUser> => {
+export const getUserByIdService= async (id: string): Promise<IUser> => {
   const user = await UserModel.findById(id).select('-password');
+  if (!user) {
+    throw new AppError('User not found.', 404);
+  }
+  return user.toObject() as IUser;
+}
+
+export const updateUserService = async (id: string, userData: IUser): Promise<IUser> => {
+  const user = await UserModel.findByIdAndUpdate(
+    id,
+    userData,
+    { new: true }
+  );
   if (!user) {
     throw new AppError('User not found.', 404);
   }

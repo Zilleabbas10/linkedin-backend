@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import type { RegisterUserBody, LoginUserBody } from '../types';
-import { createUser, loginUser, googleLoginUser, getCurrentUser } from '../services/user.service';
+import type { RegisterUserBody, LoginUserBody, AuthenticatedRequest } from '../types';
+import { createUser, loginUser, googleLoginUser, getUserByIdService, updateUserService } from '../services/user.service';
 import { getCookieOptions } from '../config';
+import { AppError } from '../middleware/errorHandler';
 import { created, ok } from '../utils/response';
 
 export const registerUser = async (
@@ -40,6 +41,26 @@ export const googleLogin = async (
 };
 
 export const getUser = async (req: Request, res: Response): Promise<Response> => {
-  const user = await getCurrentUser(req.user!.id);
+  const authReq = req as AuthenticatedRequest;
+  const user = await getUserByIdService(authReq.user.id);
   return ok(res, { user });
+};
+
+export const updateUser = async (req: Request, res: Response): Promise<Response> => {
+  const authReq = req as AuthenticatedRequest;
+  const user = await updateUserService(authReq.user.id, req.body);
+  return ok(res, { user });
+};
+
+export const getUserById = async (req: Request, res: Response): Promise<Response> => {
+  const {id} = req.params;
+  const _id = typeof id === 'string' ? id : id?.[0];
+  if (!_id) throw new AppError('User ID required', 400);
+  const user = await getUserByIdService(_id);
+  return ok(res, { user });
+};
+
+export const logoutUser = async (req: Request, res: Response): Promise<Response> => {
+  res.clearCookie('token', getCookieOptions());
+  return ok(res, { message: 'Logged out successfully' });
 };
