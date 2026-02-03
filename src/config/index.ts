@@ -8,3 +8,10 @@ export const config = {
 } as const;
 
 export type Config = typeof config;
+
+export const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: config.nodeEnv === 'production',
+  maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+  sameSite: 'lax' as const,
+});

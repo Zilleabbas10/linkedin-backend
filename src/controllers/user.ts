@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import type { RegisterUserBody, LoginUserBody, } from '../types';
-import { createUser, loginUser, googleLoginUser } from '../services/user.service';
+import type { RegisterUserBody, LoginUserBody } from '../types';
+import { createUser, loginUser, googleLoginUser, getCurrentUser } from '../services/user.service';
+import { getCookieOptions } from '../config';
 import { created, ok } from '../utils/response';
 
 export const registerUser = async (
@@ -23,6 +24,7 @@ export const signInUser = async (
     email: req.body.email,
     password: req.body.password
   });
+  res.cookie('token', user.token, getCookieOptions());
   return ok(res, { user });
 };
 
@@ -33,5 +35,11 @@ export const googleLogin = async (
   const user = await googleLoginUser({
     token: req.body.token
   });
+  res.cookie('token', user.token, getCookieOptions());
+  return ok(res, { user });
+};
+
+export const getUser = async (req: Request, res: Response): Promise<Response> => {
+  const user = await getCurrentUser(req.user!.id);
   return ok(res, { user });
 };

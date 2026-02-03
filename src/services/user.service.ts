@@ -71,15 +71,27 @@ export const googleLoginUser = async (input: GoogleLoginUserInput): Promise<IUse
     throw new AppError('Invalid token.', 400);
   }
   const { email, name, sub, picture } = payload;
-  const user = await UserModel.findOne({ email });
-  if (user) {
-    return { ...user.toObject() as IUser, token } as IUser & { token: string };
+  let user = await UserModel.findOne({ email });
+  if (!user) {
+    user = await UserModel.create({
+      email,
+      googleId: sub,
+      f_name: name,
+      profile_pic: picture,
+    });
   }
-  const newUser = await UserModel.create({
-    email,
-    googleId: sub,
-    f_name: name,
-    profile_pic: picture,
-  });
-  return { ...newUser.toObject() as IUser, token } as IUser & { token: string };
+  if (!config.jwtSecret) {
+    throw new AppError('JWT secret not configured.', 500);
+  }
+  const jwt = jsonwebtoken.sign({ id: user._id }, config.jwtSecret, { expiresIn: '1h' });
+  const userObj = user.toObject() as IUser;
+  return { ...userObj, token: jwt } as IUser & { token: string };
+};
+
+export const getCurrentUser = async (id: string): Promise<IUser> => {
+  const user = await UserModel.findById(id).select('-password');
+  if (!user) {
+    throw new AppError('User not found.', 404);
+  }
+  return user.toObject() as IUser;
 };
