@@ -3,7 +3,7 @@ import type { IPost } from '../types';
 import { createModel } from '../utils/createModel';
 
 const PostSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
     desc: { type: String },
     imageLink: { type: String },
     likes: { type: [mongoose.Schema.Types.ObjectId], ref: 'user' },

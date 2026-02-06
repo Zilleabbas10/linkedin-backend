@@ -10,7 +10,7 @@ router.post('/auth/login', asyncHandler(signInUser));
 router.post('/auth/logout', asyncHandler(logoutUser));
 router.post('/auth/google', asyncHandler(googleLogin));
 router.get('/auth/self/', authenticate, asyncHandler(getUser));
-router.put('/auth/update', authenticate, asyncHandler(updateUser));
-router.get('/user/:id', authenticate, asyncHandler(getUserById));
+router.put('/auth/update-user', authenticate, asyncHandler(updateUser));
+router.get('/get-user-by-id/:id', authenticate, asyncHandler(getUserById));
 
 export default router;

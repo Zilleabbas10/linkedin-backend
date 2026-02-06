@@ -53,10 +53,8 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
 };
 
 export const getUserById = async (req: Request, res: Response): Promise<Response> => {
-  const {id} = req.params;
-  const _id = typeof id === 'string' ? id : id?.[0];
-  if (!_id) throw new AppError('User ID required', 400);
-  const user = await getUserByIdService(_id);
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const user = await getUserByIdService(id);
   return ok(res, { user });
 };
 

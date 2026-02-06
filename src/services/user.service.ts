@@ -37,7 +37,7 @@ export const createUser = async (input: CreateUserInput): Promise<IUser> => {
     password: await bcrypt.hash(password, 10),
     f_name: full_name?.trim() ?? ''
   });
-  return user.toObject() as IUser;
+  return user.toObject();
 };
 
 export const loginUser = async (input: LoginUserInput): Promise<IUser & { token: string }> => {
@@ -56,8 +56,7 @@ export const loginUser = async (input: LoginUserInput): Promise<IUser & { token:
     throw new AppError('JWT secret not configured.', 500);
   }
   const token = jsonwebtoken.sign({ id: user._id }, config.jwtSecret, { expiresIn: '1h' });
-  const userObj = user.toObject() as IUser;
-  return { ...userObj, token } as IUser & { token: string };
+  return { ...user.toObject(), token };
 };
 
 export const googleLoginUser = async (input: GoogleLoginUserInput): Promise<IUser & { token: string }> => {
@@ -84,16 +83,15 @@ export const googleLoginUser = async (input: GoogleLoginUserInput): Promise<IUse
     throw new AppError('JWT secret not configured.', 500);
   }
   const jwt = jsonwebtoken.sign({ id: user._id }, config.jwtSecret, { expiresIn: '1h' });
-  const userObj = user.toObject() as IUser;
-  return { ...userObj, token: jwt } as IUser & { token: string };
+  return { ...user.toObject(), token: jwt };
 };
 
-export const getUserByIdService= async (id: string): Promise<IUser> => {
+export const getUserByIdService = async (id: string): Promise<IUser> => {
   const user = await UserModel.findById(id).select('-password');
   if (!user) {
     throw new AppError('User not found.', 404);
   }
-  return user.toObject() as IUser;
+  return user.toObject();
 }
 
 export const updateUserService = async (id: string, userData: IUser): Promise<IUser> => {
@@ -105,5 +103,5 @@ export const updateUserService = async (id: string, userData: IUser): Promise<IU
   if (!user) {
     throw new AppError('User not found.', 404);
   }
-  return user.toObject() as IUser;
+  return user.toObject();
 };
