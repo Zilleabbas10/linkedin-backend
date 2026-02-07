@@ -4,7 +4,7 @@ import { AppError } from "../middleware/errorHandler";
 import mongoose from "mongoose";
 import { toPostWithUserInfo } from "../utils/postWithUserInfo";
 
-const USER_INFO_FIELDS = 'f_name headline profile_pic';
+export const USER_INFO_FIELDS = 'f_name headline profile_pic';
 
 export const addPostService = async (id: string, postData: IPost): Promise<IPost> => {
     try {

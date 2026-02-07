@@ -6,7 +6,7 @@ export interface IPost {
   desc?: string;
   imageLink?: string;
   likes?: mongoose.Types.ObjectId[];
-  comments?: number[];
+  comments?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

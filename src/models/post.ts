@@ -7,12 +7,7 @@ const PostSchema = new mongoose.Schema({
     desc: { type: String },
     imageLink: { type: String },
     likes: { type: [mongoose.Schema.Types.ObjectId], ref: 'user' },
-    comments: [
-        {
-            type: Number,
-            default: 0
-        }
-    ]
+    comments: { type: Number, default: 0 },
 }, { timestamps: true })
 
 const PostModel = createModel<IPost>('post', PostSchema);
