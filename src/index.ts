@@ -7,7 +7,12 @@ import routes from './routes';
 
 const app = express();
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174'],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
